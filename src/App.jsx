@@ -5,7 +5,6 @@ import Spinner from './components/spinner'
 import MovieCard from './components/MovieCard'
 import { useDebounce } from 'react-use'
 import { updateSearchCount } from './appwrite.js'
-import { getTrendingMovies } from './appwrite.js'
 import MoviePlayer from './pages/MoviePlayer'
 
 const API_BASE_URL = 'https://api.themoviedb.org/3'
@@ -25,7 +24,6 @@ const Home = () => {
   const [movieList, setMovieList] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
-  const [trendingMovies, setTrendingMovies] = useState([])
   const [mediaType, setMediaType] = useState('movie')
   useDebounce(() => setDebouncedSearchTerm(searchTerm), 500, [searchTerm])
 
@@ -72,22 +70,11 @@ const Home = () => {
       setIsLoading(false)
     }
   }, [mediaType])
-  const loadTrendingMovies = async () => {
-    try{
-      const movies = await getTrendingMovies();
-
-      setTrendingMovies(movies);
-    }
-    catch(error){
-      console.error("Error fetching trending movies:", error);
-    }
-  }
+  
   useEffect(() => {
     fetchMovies(debouncedSearchTerm, mediaType)
   }, [debouncedSearchTerm, mediaType, fetchMovies])
-  useEffect(() => {
-    loadTrendingMovies()
-  }, [])
+  
 
   const toggleButtonStyle = (active) => ({
     padding: '0.5rem 1.25rem',
@@ -137,19 +124,7 @@ const Home = () => {
             </button>
           </div>
         </header>
-        {trendingMovies.length > 0 && (
-          <section className="trending">
-            <h2>Trending Searches</h2>
-            <ul>
-              {trendingMovies.map((movie, index) => (
-                <li key={movie.$id}>
-                  <p>{index + 1}</p>
-                  <img src={movie.poster_url} alt={movie.searchTerm} />
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
+        
         <section className="all-movies">
           <h2>{mediaType === 'movie' ? 'All Movies' : 'All TV Shows'}</h2>
 
