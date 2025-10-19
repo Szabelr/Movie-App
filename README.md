@@ -1,3 +1,4 @@
 # React Movie and Tv-Show watcher app
--With a continue watching feature.
+-Continue watching feature
+
 -Dark/white mode
