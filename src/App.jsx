@@ -79,20 +79,6 @@ const Home = () => {
   }, [debouncedSearchTerm, mediaType, fetchMovies])
   
 
-  const toggleButtonStyle = (active) => {
-    const isDark = theme === 'dark'
-    return {
-      padding: '0.5rem 1.25rem',
-      borderRadius: '9999px',
-      border: isDark ? '1px solid rgba(255,255,255,0.4)' : '1px solid rgba(0,0,0,0.4)',
-      backgroundColor: active ? (isDark ? '#fff' : '#1f2937') : 'transparent',
-      color: active ? (isDark ? '#000' : '#fff') : (isDark ? '#fff' : '#1f2937'),
-      cursor: 'pointer',
-      fontWeight: 600,
-      transition: 'background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease',
-    }
-  }
-
   return (
     <main>
       <div className="pattern" />
@@ -109,24 +95,17 @@ const Home = () => {
             setSearchTerm={setSearchTerm}
             placeholder={`Search for ${mediaType === 'movie' ? 'movies' : 'TV shows'}`}
           />
-          <div
-            style={{
-              display: 'flex',
-              gap: '0.75rem',
-              marginTop: '1rem',
-              flexWrap: 'wrap',
-            }}
-          >
+          <div className="media-toggle-buttons">
             <button
               type="button"
-              style={toggleButtonStyle(mediaType === 'movie')}
+              className={`media-toggle-btn ${mediaType === 'movie' ? 'active' : ''}`}
               onClick={() => setMediaType('movie')}
             >
               Movies
             </button>
             <button
               type="button"
-              style={toggleButtonStyle(mediaType === 'tv')}
+              className={`media-toggle-btn ${mediaType === 'tv' ? 'active' : ''}`}
               onClick={() => setMediaType('tv')}
             >
               TV Shows
