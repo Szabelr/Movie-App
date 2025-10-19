@@ -4,6 +4,7 @@ import Search from './components/search'
 import Spinner from './components/spinner'
 import MovieCard from './components/MovieCard'
 import ThemeToggle from './components/ThemeToggle'
+import ContinueWatching from './components/ContinueWatching'
 import { useTheme } from './hooks/useTheme'
 import { useDebounce } from 'react-use'
 import { updateSearchCount } from './appwrite.js'
@@ -112,6 +113,8 @@ const Home = () => {
             </button>
           </div>
         </header>
+        
+        <ContinueWatching />
         
         <section className="all-movies">
           <h2>{mediaType === 'movie' ? 'All Movies' : 'All TV Shows'}</h2>

@@ -76,7 +76,7 @@
   }
 
   [data-theme="light"] .pattern {
-    opacity: 0.15;
+    opacity: 0;
   }
 
   .wrapper {
@@ -187,6 +187,107 @@
 
   [data-theme="light"] .media-toggle-btn:not(.active) {
     @apply bg-transparent text-gray-900 border-gray-900/40;
+  }
+
+  .continue-watching {
+    @apply space-y-6 mt-12;
+
+    & h2 {
+      @apply mb-4;
+    }
+
+    & ul {
+      @apply flex flex-row overflow-x-auto gap-5 pb-4 hide-scrollbar;
+    }
+
+    & ul li {
+      @apply flex-shrink-0;
+    }
+  }
+
+  .continue-watching-card {
+    @apply bg-dark-100 rounded-2xl shadow-inner shadow-light-100/10 w-[200px] sm:w-[230px];
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(206, 206, 251, 0.2);
+    }
+
+    & .poster-container {
+      @apply relative;
+    }
+
+    & .poster-container img {
+      @apply rounded-t-2xl h-[300px] sm:h-[345px] w-full object-cover;
+    }
+
+    & .progress-overlay {
+      @apply absolute bottom-0 left-0 right-0 h-1 bg-gray-800/50;
+    }
+
+    & .progress-bar {
+      @apply h-full bg-gradient-to-r from-purple-500 to-pink-500;
+      transition: width 0.3s ease;
+    }
+
+    & .remove-btn {
+      @apply absolute top-2 right-2 z-10 bg-black/70 text-white rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold;
+      @apply hover:bg-black/90 cursor-pointer transition-all duration-200;
+      border: none;
+      line-height: 1;
+    }
+
+    & .remove-btn:hover {
+      transform: scale(1.1);
+    }
+
+    & > div:last-child {
+      @apply p-4;
+    }
+
+    & h3 {
+      @apply text-white font-bold text-sm line-clamp-2 mb-1;
+      transition: color 0.3s ease;
+    }
+
+    & .episode-info {
+      @apply text-purple-400 text-xs font-semibold mb-1;
+      transition: color 0.3s ease;
+    }
+
+    & .time-info {
+      @apply text-gray-100 text-xs;
+      transition: color 0.3s ease;
+    }
+  }
+
+  [data-theme="light"] .continue-watching-card {
+    @apply bg-white shadow-lg;
+
+    &:hover {
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    & h3 {
+      @apply text-gray-900;
+    }
+
+    & .episode-info {
+      @apply text-purple-700;
+    }
+
+    & .time-info {
+      @apply text-gray-600;
+    }
+
+    & .remove-btn {
+      @apply bg-white/90 text-gray-900;
+    }
+
+    & .remove-btn:hover {
+      @apply bg-white;
+    }
   }
 
   .all-movies {
