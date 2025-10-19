@@ -114,7 +114,7 @@ const Home = () => {
           </div>
         </header>
         
-        <ContinueWatching />
+        <ContinueWatching searchTerm={searchTerm} />
         
         <section className="all-movies">
           <h2>{mediaType === 'movie' ? 'All Movies' : 'All TV Shows'}</h2>
