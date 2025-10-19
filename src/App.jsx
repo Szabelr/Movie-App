@@ -3,6 +3,8 @@ import { Routes, Route } from 'react-router-dom'
 import Search from './components/search'
 import Spinner from './components/spinner'
 import MovieCard from './components/MovieCard'
+import ThemeToggle from './components/ThemeToggle'
+import { useTheme } from './hooks/useTheme'
 import { useDebounce } from 'react-use'
 import { updateSearchCount } from './appwrite.js'
 import MoviePlayer from './pages/MoviePlayer'
@@ -19,6 +21,7 @@ const API_OPTIONS = {
 }
 
 const Home = () => {
+  const { theme } = useTheme()
   const [searchTerm, setSearchTerm] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const [movieList, setMovieList] = useState([])
@@ -76,22 +79,14 @@ const Home = () => {
   }, [debouncedSearchTerm, mediaType, fetchMovies])
   
 
-  const toggleButtonStyle = (active) => ({
-    padding: '0.5rem 1.25rem',
-    borderRadius: '9999px',
-    border: '1px solid rgba(255,255,255,0.4)',
-    backgroundColor: active ? '#fff' : 'transparent',
-    color: active ? '#000' : '#fff',
-    cursor: 'pointer',
-    fontWeight: 600,
-    transition: 'background-color 0.2s ease, color 0.2s ease',
-  })
-
   return (
     <main>
       <div className="pattern" />
       <div className="wrapper">
         <header>
+          <div className="header-top">
+            <ThemeToggle />
+          </div>
           <h1>
             Watch <span className="text-gradient">Anything</span> For Free 
           </h1>
@@ -100,24 +95,17 @@ const Home = () => {
             setSearchTerm={setSearchTerm}
             placeholder={`Search for ${mediaType === 'movie' ? 'movies' : 'TV shows'}`}
           />
-          <div
-            style={{
-              display: 'flex',
-              gap: '0.75rem',
-              marginTop: '1rem',
-              flexWrap: 'wrap',
-            }}
-          >
+          <div className="media-toggle-buttons">
             <button
               type="button"
-              style={toggleButtonStyle(mediaType === 'movie')}
+              className={`media-toggle-btn ${mediaType === 'movie' ? 'active' : ''}`}
               onClick={() => setMediaType('movie')}
             >
               Movies
             </button>
             <button
               type="button"
-              style={toggleButtonStyle(mediaType === 'tv')}
+              className={`media-toggle-btn ${mediaType === 'tv' ? 'active' : ''}`}
               onClick={() => setMediaType('tv')}
             >
               TV Shows
@@ -131,7 +119,7 @@ const Home = () => {
           {isLoading ? (
             <Spinner />
           ) : errorMessage ? (
-            <p className="text-red-500">{errorMessage}</p>
+            <p className={theme === 'light' ? 'text-red-600' : 'text-red-500'}>{errorMessage}</p>
           ) : (
             <ul>
               {movieList.map((movie) => (
