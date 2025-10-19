@@ -94,7 +94,7 @@ const ContinueWatchingCard = ({ item, movieData, onRemove }) => {
   );
 };
 
-const ContinueWatching = () => {
+const ContinueWatching = ({ searchTerm = '' }) => {
   const [continueWatchingItems, setContinueWatchingItems] = useState([]);
   const [movieDataMap, setMovieDataMap] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -159,6 +159,11 @@ const ContinueWatching = () => {
 
   if (continueWatchingItems.length === 0) {
     return null; // Don't show section if empty
+  }
+
+  // Hide when searching
+  if (searchTerm.trim() !== '') {
+    return null;
   }
 
   return (
