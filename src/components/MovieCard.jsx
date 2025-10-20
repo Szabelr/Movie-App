@@ -27,7 +27,7 @@ const MovieCard = ({ movie, mediaType = 'movie' }) => {
   const handleOpenMovie = () => navigate(`/movie/${id}?type=${mediaType}`);
 
   return (
-    <div
+    <article
       className="movie-card"
       role="button"
       onClick={handleOpenMovie}
@@ -38,41 +38,56 @@ const MovieCard = ({ movie, mediaType = 'movie' }) => {
         }
       }}
       tabIndex={0}
-      style={{ cursor: 'pointer' }}
     >
-      <img
-        src={poster_path ? `https://image.tmdb.org/t/p/w500${poster_path}` : './no-movie.png'}
-        alt={displayTitle}
-      />
+      <div className="movie-card__poster">
+        <img
+          src={poster_path ? `https://image.tmdb.org/t/p/w500${poster_path}` : './no-movie.png'}
+          alt={displayTitle}
+        />
 
-      <div className="mt-4">
-        <h3>{displayTitle}</h3>
+        <div className="movie-card__overlay" />
 
-        <div className="content">
-          <div className="rating">
+        {vote_average ? (
+          <span className="movie-card__rating">
             <img src="./star.svg" alt="Star Icon" />
-            <span>{vote_average?.toFixed(1)}</span>
-          </div>
+            {vote_average.toFixed(1)}
+          </span>
+        ) : null}
+      </div>
 
-          <p className="text-sm text-gray-500">
-            {isTv ? (
-              <>
-                {seasonCount
-                  ? `${seasonCount} season${seasonCount === 1 ? '' : 's'}`
-                  : 'Seasons unavailable'}
-                {displayDate ? ` • ${displayDate}` : ''}
-                {original_language ? ` • ${original_language.toUpperCase()}` : ''}
-              </>
-            ) : (
-              <>
-                {displayDate}
-                {original_language ? ` • ${original_language.toUpperCase()}` : ''}
-              </>
-            )}
-          </p>
+      <div className="movie-card__content">
+        <div className="movie-card__header">
+          <h3>{displayTitle}</h3>
+          <span className="movie-card__chip">{isTv ? 'TV' : 'Movie'}</span>
+        </div>
+
+        <p className="movie-card__meta">
+          {isTv ? (
+            <>
+              {seasonCount
+                ? `${seasonCount} season${seasonCount === 1 ? '' : 's'}`
+                : 'Seasons unavailable'}
+              {displayDate ? ` • ${new Date(displayDate).getFullYear()}` : ''}
+              {original_language ? ` • ${original_language.toUpperCase()}` : ''}
+            </>
+          ) : (
+            <>
+              {displayDate
+                ? new Date(displayDate).toLocaleDateString(undefined, { year: 'numeric' })
+                : 'Date TBD'}
+              {original_language ? ` • ${original_language.toUpperCase()}` : ''}
+            </>
+          )}
+        </p>
+
+        <div className="movie-card__footer">
+          <span className="movie-card__cta">
+            View details
+            <span aria-hidden="true"> →</span>
+          </span>
         </div>
       </div>
-    </div>
+    </article>
   );
 };
 

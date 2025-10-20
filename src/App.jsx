@@ -9,6 +9,7 @@ import { useTheme } from './hooks/useTheme'
 import { useDebounce } from 'react-use'
 import { updateSearchCount } from './appwrite.js'
 import MoviePlayer from './pages/MoviePlayer'
+import MovieDetails from './pages/MovieDetails'
 
 const API_BASE_URL = 'https://api.themoviedb.org/3'
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY
@@ -126,7 +127,9 @@ const Home = () => {
           ) : (
             <ul>
               {movieList.map((movie) => (
-                <MovieCard key={movie.id} movie={movie} mediaType={mediaType} />
+                <li key={`${mediaType}-${movie.id}`}>
+                  <MovieCard movie={movie} mediaType={mediaType} />
+                </li>
               ))}
             </ul>
           )}
@@ -139,7 +142,8 @@ const Home = () => {
 const App = () => (
   <Routes>
     <Route path="/" element={<Home />} />
-    <Route path="/movie/:id" element={<MoviePlayer />} />
+    <Route path="/movie/:id" element={<MovieDetails />} />
+    <Route path="/watch/:id" element={<MoviePlayer />} />
   </Routes>
 )
 

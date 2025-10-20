@@ -11,6 +11,7 @@ const MoviePlayer = () => {
 
   const searchParams = new URLSearchParams(location.search);
   const mediaType = searchParams.get('type') === 'tv' ? 'tv' : 'movie';
+  const previousPath = location.state?.from;
   
   // Get saved progress to resume from
   const savedProgress = getItemProgress(id, mediaType);
@@ -84,7 +85,17 @@ const MoviePlayer = () => {
     >
       <button
         type="button"
-        onClick={() => navigate('/')}
+        onClick={() => {
+          if (previousPath) {
+            navigate(previousPath);
+            return;
+          }
+          if (window.history.length <= 1) {
+            navigate('/');
+            return;
+          }
+          navigate(-1);
+        }}
         style={{
           position: 'absolute',
           top: '1.5rem',
