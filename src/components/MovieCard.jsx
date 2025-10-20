@@ -53,12 +53,13 @@ const MovieCard = ({ movie, mediaType = 'movie' }) => {
             {vote_average.toFixed(1)}
           </span>
         ) : null}
-
-        <span className="movie-card__media-type">{isTv ? 'TV Show' : 'Movie'}</span>
       </div>
 
       <div className="movie-card__content">
-        <h3>{displayTitle}</h3>
+        <div className="movie-card__header">
+          <h3>{displayTitle}</h3>
+          <span className="movie-card__chip">{isTv ? 'TV' : 'Movie'}</span>
+        </div>
 
         <p className="movie-card__meta">
           {isTv ? (
@@ -71,19 +72,13 @@ const MovieCard = ({ movie, mediaType = 'movie' }) => {
             </>
           ) : (
             <>
-              {displayDate ? new Date(displayDate).toLocaleDateString(undefined, { year: 'numeric' }) : 'Date TBD'}
+              {displayDate
+                ? new Date(displayDate).toLocaleDateString(undefined, { year: 'numeric' })
+                : 'Date TBD'}
               {original_language ? ` • ${original_language.toUpperCase()}` : ''}
             </>
           )}
         </p>
-
-        {movie.overview ? (
-          <p className="movie-card__overview">{movie.overview}</p>
-        ) : (
-          <p className="movie-card__overview movie-card__overview--muted">
-            Dive in to explore more details.
-          </p>
-        )}
 
         <div className="movie-card__footer">
           <span className="movie-card__cta">

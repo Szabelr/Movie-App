@@ -144,6 +144,13 @@ const MovieDetails = () => {
   const displayTitle = mediaType === 'tv' ? name || original_name || title : title || name || original_name;
   const displayDate = mediaType === 'tv' ? first_air_date : release_date;
   const formattedYear = displayDate ? new Date(displayDate).getFullYear() : null;
+  const formattedDateFull = displayDate
+    ? new Date(displayDate).toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })
+    : null;
   const formattedRuntime = mediaType === 'tv'
     ? formatRuntime(Array.isArray(episode_run_time) ? episode_run_time[0] : episode_run_time)
     : formatRuntime(runtime);
@@ -156,6 +163,51 @@ const MovieDetails = () => {
   const primaryActionLabel = hasProgress
     ? `Resume${savedProgress.progress ? ` (${Math.round(savedProgress.progress)}%)` : ''}`
     : 'Watch Now';
+
+  const languageNames = spoken_languages
+    ?.map((language) => language.english_name || language.name)
+    .filter(Boolean);
+
+  const keyFacts = [
+    formattedDateFull
+      ? {
+          label: mediaType === 'tv' ? 'First Aired' : 'Released',
+          value: formattedDateFull,
+        }
+      : null,
+    formattedRuntime
+      ? {
+          label: mediaType === 'tv' ? 'Avg. Episode Length' : 'Runtime',
+          value: formattedRuntime,
+        }
+      : null,
+    status
+      ? {
+          label: 'Status',
+          value: status,
+        }
+      : null,
+    vote_average
+      ? {
+          label: 'TMDB Score',
+          value: `${vote_average.toFixed(1)} / 10`,
+        }
+      : null,
+    mediaType === 'tv' && number_of_seasons
+      ? {
+          label: 'Seasons',
+          value: `${number_of_seasons}${number_of_episodes ? ` • ${number_of_episodes} episodes` : ''}`,
+        }
+      : null,
+    languageNames?.length
+      ? {
+          label: 'Spoken Languages',
+          value: languageNames.join(', '),
+        }
+      : null,
+  ].filter(Boolean);
+
+  const creatorNames = created_by?.map((creator) => creator.name).filter(Boolean);
 
   const recommendationsList = recommendations?.results
     ?.filter((item) => item && item.id !== Number(id))
@@ -185,38 +237,43 @@ const MovieDetails = () => {
               src={poster_path ? `https://image.tmdb.org/t/p/w500${poster_path}` : '/no-movie.png'}
               alt={displayTitle}
             />
-          </div>
 
-          <div className="movie-details__info">
-            <p className="movie-details__label">{mediaType === 'tv' ? 'TV Show' : 'Movie'}</p>
-            <h1>{displayTitle}</h1>
-            {tagline && <p className="movie-details__tagline">{tagline}</p>}
-
-            <div className="movie-details__meta">
+            <div className="movie-details__poster-overlay">
               {vote_average ? (
-                <span className="movie-details__rating">
+                <span className="movie-details__poster-badge">
                   <img src="/star.svg" alt="Star icon" />
                   {vote_average.toFixed(1)}
                 </span>
               ) : null}
+              {formattedRuntime ? <span className="movie-details__poster-runtime">{formattedRuntime}</span> : null}
+            </div>
+          </div>
+
+          <div className="movie-details__info">
+            <div className="movie-details__headline">
+              <p className="movie-details__label">{mediaType === 'tv' ? 'TV Show' : 'Movie'}</p>
+              <h1>{displayTitle}</h1>
+              {tagline && <p className="movie-details__tagline">{tagline}</p>}
+            </div>
+
+            <div className="movie-details__meta">
               {formattedYear && <span>{formattedYear}</span>}
-              {formattedRuntime && <span>{formattedRuntime}</span>}
-              {status && <span>{status}</span>}
               {mediaType === 'tv' && number_of_seasons ? (
                 <span>
                   {number_of_seasons} season{number_of_seasons === 1 ? '' : 's'}
                   {number_of_episodes ? ` • ${number_of_episodes} episodes` : ''}
                 </span>
               ) : null}
+              {status && <span>{status}</span>}
             </div>
 
             {genres?.length ? (
-              <p className="movie-details__genres">
-                {genres.map((genre) => genre.name).join(' • ')}
-              </p>
+              <ul className="movie-details__genres" aria-label="Genres">
+                {genres.map((genre) => (
+                  <li key={genre.id}>{genre.name}</li>
+                ))}
+              </ul>
             ) : null}
-
-            {overview && <p className="movie-details__overview">{overview}</p>}
 
             <div className="movie-details__actions">
               <button type="button" className="primary" onClick={handleWatch}>
@@ -238,20 +295,56 @@ const MovieDetails = () => {
                 Last watched: Season {savedProgress.season}, Episode {savedProgress.episode}
               </p>
             )}
-
-            {created_by?.length ? (
-              <p className="movie-details__creators">
-                Created by {created_by.map((creator) => creator.name).join(', ')}
-              </p>
-            ) : null}
-
-            {spoken_languages?.length ? (
-              <p className="movie-details__languages">
-                Languages: {spoken_languages.map((language) => language.english_name || language.name).join(', ')}
-              </p>
-            ) : null}
           </div>
         </section>
+
+        {overview ? (
+          <section className="movie-details__section movie-details__section--overview">
+            <div className="movie-details__section-header">
+              <h2>Overview</h2>
+            </div>
+            <p>{overview}</p>
+          </section>
+        ) : null}
+
+        {keyFacts.length ? (
+          <section className="movie-details__section movie-details__facts">
+            <div className="movie-details__section-header">
+              <h2>Key Facts</h2>
+              <p>All the essential details before you press play.</p>
+            </div>
+            <dl>
+              {keyFacts.map(({ label, value }) => (
+                <div key={label} className="movie-details__fact">
+                  <dt>{label}</dt>
+                  <dd>{value}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        ) : null}
+
+        {creatorNames?.length ? (
+          <section className="movie-details__section movie-details__creators">
+            <div className="movie-details__section-header">
+              <h2>Created by</h2>
+            </div>
+            <p>{creatorNames.join(', ')}</p>
+          </section>
+        ) : null}
+
+        {languageNames?.length ? (
+          <section className="movie-details__section movie-details__languages">
+            <div className="movie-details__section-header">
+              <h2>Spoken Languages</h2>
+            </div>
+            <ul>
+              {languageNames.map((language) => (
+                <li key={language}>{language}</li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
 
         {cast.length > 0 && (
           <section className="movie-details__section">
